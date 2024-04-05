@@ -33,26 +33,125 @@ function oldScrabbleScorer(word) {
 // don't change the names or your program won't work as expected. //
 
 function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
+   console.log("Let's play some scrabble!");
+   let word;
+   while (word === undefined || typeof numberOrNaN === 'number') {
+      let response = input.question('Enter a word to score: ')
+      numberOrNaN = Number(response);
+      if (!(isNaN(numberOrNaN))) {
+         console.log('Invalid user entry. Please enter a word.')
+      } else {
+         word = response;
+         break;
+      }
+   }
+   return word
 };
 
-let simpleScorer;
+function simpleScorer(word) {
+   word = word.toUpperCase();
+   let score = 0;
+   for (let i = 0; i < word.length; i++) {
+      score += 1;
+   }
+   return score;
+};
 
-let vowelBonusScorer;
+const vowels = ['A', 'E', 'I', 'O', 'U'];
 
-let scrabbleScorer;
+function vowelBonusScorer(word) {
+   word = word.toUpperCase();
+   let score = 0;
+   for (let i = 0; i < word.length; i++) {
+      if (vowels.includes(word[i])) {
+         score += 3;
+      } else {
+         score++
+      }
+   }
+   return score;
+};
 
-const scoringAlgorithms = [];
+function scrabbleScorer(word) {
+   word = word.toLowerCase();
+   const newPointStructure = transform(oldPointStructure);
+   let score = 0;
+   for (let i = 0; i < word.length; i++) {
+      for (const letter in newPointStructure) {
+         if (letter === word[i]) {
+            score += newPointStructure[letter]
+            break;
+         }
+      }
+   }
+   return score
+};
 
-function scorerPrompt() {}
+const simpleScore = {
+   name: 'Simple Score',
+   description: 'Each letter is worth 1 point',
+   scorerFunction: simpleScorer
+};
 
-function transform() {};
+const bonusVowels = {
+   name: 'Bonus Vowels',
+   description: 'Vowels are 3 pts, consonants are 1 pt.',
+   scorerFunction: vowelBonusScorer
+};
 
-let newPointStructure;
+const scrabble = {
+   name: 'Scrabble',
+   description: 'The traditional scoring algorithm.',
+   scorerFunction: scrabbleScorer
+};
+
+const scoringAlgorithms = [simpleScore, bonusVowels, scrabble];
+
+function scorerPrompt() {
+   let index;
+   while (index < 0 || index > 2 || isNaN(index) || index === undefined) {
+      let response = input.question('Which scoring algorithm would you like to use?\n Enter 0 for simple score\n Enter 1 for bonus vowel\n Enter 2 for traditional scrabble ')
+      index = Number(response);
+      if (index < 0 || index > 3) {
+         console.log(`Invalid user entry. Please enter a number between 0 and 2. You entered: ${response}`)
+      } else if (isNaN(index)) {
+         console.log(`Invalid user entry. Please enter a number. You entered: ${response}`)
+      } else {
+         console.log('Valid entry recorded.')
+      }
+   }
+   console.log(`Scoring algorithm selected: ${scoringAlgorithms[index].name}\nDescription: ${scoringAlgorithms[index].description}`)
+   return scoringAlgorithms[index];
+}
+
+/* 
+1. initialize newPointStructure variable as a new Object
+2. loop over each property of oldPointStructure and retrieve the array we want to loop over
+3. loop over each array value and set the key in the new object as the array value and the value as the old key converted to a number 
+*/
+
+function transform(oldPointStructure) {
+   const newPointStructure = new Object();
+   for (let property in oldPointStructure) {
+      let arrayOfValues = oldPointStructure[property]
+      arrayOfValues.forEach(function(value) {
+         newPointStructure[value.toLowerCase()] = Number(property)
+      })
+   }
+   return newPointStructure;
+};
+let newPointStructure = transform(oldPointStructure);
 
 function runProgram() {
-   initialPrompt();
-   
+   let word = initialPrompt();
+   let algorithm = scorerPrompt();
+   let score = algorithm.scorerFunction(word);
+   if (typeof score === 'string') {
+      console.log(`Score for '${word}': \n${score} `)
+   } else {
+      console.log(`Score for '${word}': ${score} `)
+   }
+   return score
 }
 
 // Don't write any code below this line //
