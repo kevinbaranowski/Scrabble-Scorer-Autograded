@@ -32,17 +32,57 @@ function oldScrabbleScorer(word) {
 // your job is to finish writing these functions and variables that we've named //
 // don't change the names or your program won't work as expected. //
 
+// function checkForSpecialCharacter(word) {
+//    const specialCharacters = [
+//       '`', "'", '"', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-',
+//       '_', '=', '+', '[', ']', '{', '}', '\\', ';', '|', ':', ',', '.', '/',
+//       '?', '<', '>'
+//    ]
+//    for (let i = 0; i < word.length; i++) {
+//       if (specialCharacters.includes(word[i])) {
+//          return true;
+//       }
+//    }
+//    return false;
+// }
+
+// function checkForNumbers(word) {
+//    const numbers = `1234567890`;
+//    for (let i = 0; i < word.length; i++) {
+//       if (numbers.includes(word[i])) {
+//          return true;
+//       }
+//    }
+//    return false;
+// }
+
+function validateCharacters(word) {
+   let wordLC = word.toLowerCase()
+   let validChars = [
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
+      'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
+      'u', 'v', 'w', 'x', 'y', 'z'
+    ]
+   for (let i = 0; i < word.length; i++) {
+      if (!validChars.includes(wordLC[i])) {
+         return false;
+      }
+   }
+   return true;
+}
+
 function initialPrompt() {
    console.log("Let's play some scrabble!");
    let word;
-   while (word === undefined || typeof numberOrNaN === 'number') {
+   let isValid;
+   while (word === undefined || isValid) {
       let response = input.question('Enter a word to score: ')
-      numberOrNaN = Number(response);
-      if (!(isNaN(numberOrNaN))) {
-         console.log('Invalid user entry. Please enter a word.')
-      } else {
-         word = response;
+      isValid = validateCharacters(response);
+      if (validateCharacters(response)) {
+         word = response
          break;
+      } else {
+         console.log(`Invalid user entry. Response contains either an invalid symbol or number.`)
       }
    }
    return word
@@ -146,11 +186,7 @@ function runProgram() {
    let word = initialPrompt();
    let algorithm = scorerPrompt();
    let score = algorithm.scorerFunction(word);
-   if (typeof score === 'string') {
-      console.log(`Score for '${word}': \n${score} `)
-   } else {
-      console.log(`Score for '${word}': ${score} `)
-   }
+   console.log(`Score for '${word}': ${score} `)
    return score
 }
 
