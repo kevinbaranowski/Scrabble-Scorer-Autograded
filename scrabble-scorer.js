@@ -176,7 +176,6 @@ function transform(oldPointStructure) {
          newPointStructure[value.toLowerCase()] = Number(property)
       })
    }
-   newPointStructure[' '] = 0;
    return newPointStructure;
 };
 let newPointStructure = transform(oldPointStructure);
