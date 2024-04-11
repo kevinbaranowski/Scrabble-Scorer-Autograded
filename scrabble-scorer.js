@@ -32,36 +32,36 @@ function oldScrabbleScorer(word) {
 // your job is to finish writing these functions and variables that we've named //
 // don't change the names or your program won't work as expected. //
 
-// function checkForSpecialCharacter(word) {
-//    const specialCharacters = [
-//       '`', "'", '"', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-',
-//       '_', '=', '+', '[', ']', '{', '}', '\\', ';', '|', ':', ',', '.', '/',
-//       '?', '<', '>'
-//    ]
-//    for (let i = 0; i < word.length; i++) {
-//       if (specialCharacters.includes(word[i])) {
-//          return true;
-//       }
-//    }
-//    return false;
-// }
+function checkForSpecialCharacter(word) {
+   const specialCharacters = [
+      '`', "'", '"', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-',
+      '_', '=', '+', '[', ']', '{', '}', '\\', ';', '|', ':', ',', '.', '/',
+      '?', '<', '>'
+   ]
+   for (let i = 0; i < word.length; i++) {
+      if (specialCharacters.includes(word[i])) {
+         return true;
+      }
+   }
+   return false;
+}
 
-// function checkForNumbers(word) {
-//    const numbers = `1234567890`;
-//    for (let i = 0; i < word.length; i++) {
-//       if (numbers.includes(word[i])) {
-//          return true;
-//       }
-//    }
-//    return false;
-// }
+function checkForNumbers(word) {
+   const numbers = `1234567890`;
+   for (let i = 0; i < word.length; i++) {
+      if (numbers.includes(word[i])) {
+         return true;
+      }
+   }
+   return false;
+}
 
 function validateCharacters(word) {
    let wordLC = word.toLowerCase()
    let validChars = [
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
       'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
-      'u', 'v', 'w', 'x', 'y', 'z'
+      'u', 'v', 'w', 'x', 'y', 'z', ' '
     ]
    for (let i = 0; i < word.length; i++) {
       if (!validChars.includes(wordLC[i])) {
@@ -74,10 +74,8 @@ function validateCharacters(word) {
 function initialPrompt() {
    console.log("Let's play some scrabble!");
    let word;
-   let isValid;
-   while (word === undefined || isValid) {
+   while (word === undefined) {
       let response = input.question('Enter a word to score: ')
-      isValid = validateCharacters(response);
       if (validateCharacters(response)) {
          word = response
          break;
@@ -178,6 +176,7 @@ function transform(oldPointStructure) {
          newPointStructure[value.toLowerCase()] = Number(property)
       })
    }
+   newPointStructure[' '] = 0;
    return newPointStructure;
 };
 let newPointStructure = transform(oldPointStructure);
